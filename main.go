@@ -10,16 +10,18 @@ func main() {
 
 	agent.GetArguments()
 
-	err := agent.KillProcess()
-	if err != nil {
-		panic("Error killing process:" + err.Error())
-	}
+	if !*agent.StandaloneUpdate {
+		err := agent.KillProcess()
+		if err != nil {
+			panic("Error killing process:" + err.Error())
+		}
 
-	time.Sleep(2 * time.Second)
+		time.Sleep(2 * time.Second)
 
-	err = agent.CleanupPreInstallRoot()
-	if err != nil {
-		panic("Error cleaning up root PRE-INST:" + err.Error())
+		err = agent.CleanupPreInstallRoot()
+		if err != nil {
+			panic("Error cleaning up root PRE-INST:" + err.Error())
+		}
 	}
 
 	apiURL := "https://api.github.com/repos/chrizziderkek/bugshotroulette/releases/latest"

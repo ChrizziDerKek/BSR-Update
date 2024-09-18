@@ -20,7 +20,7 @@ func OpenProcess() error {
 				return err
 			}
 
-			cmd = exec.Command(path)
+			cmd = exec.Command("cmd", "/c", "start", "cmd", "/k", path)
 		} else {
 			cmd = exec.Command("mono", "BSR_Server.exe")
 		}

@@ -6,22 +6,35 @@ import (
 )
 
 func CleanupPostInstallRoot(source string) error {
-	entries, err := os.ReadDir(source)
-	if err != nil {
-		return err
-	}
 
-	for _, entry := range entries {
-		srcPath := filepath.Join(source, entry.Name())
-		destPath := entry.Name()
-
-		err := os.Rename(srcPath, destPath)
+	if *IsServerUpdate {
+		err := os.Rename(source+"/BSR_Server.exe", "BSR_Server.exe")
 		if err != nil {
 			return err
 		}
+
+		err = os.RemoveAll(source)
+		if err != nil {
+			return err
+		}
+	} else {
+		entries, err := os.ReadDir(source)
+		if err != nil {
+			return err
+		}
+
+		for _, entry := range entries {
+			srcPath := filepath.Join(source, entry.Name())
+			destPath := entry.Name()
+
+			err := os.Rename(srcPath, destPath)
+			if err != nil {
+				return err
+			}
+		}
 	}
 
-	err = os.Remove("update.zip")
+	err := os.Remove("update.zip")
 	if err != nil {
 		return err
 	}
@@ -32,7 +45,7 @@ func CleanupPostInstallRoot(source string) error {
 			return err
 		}
 
-		err = os.Remove("sounds")
+		err = os.RemoveAll("sounds")
 		if err != nil {
 			return err
 		}
